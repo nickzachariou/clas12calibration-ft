@@ -923,10 +923,10 @@ public class FTHODOModule extends JPanel implements CalibrationConstantsListener
                     this.canvasEvent.draw(histogramsFTHodo.H_FADC_RAW_PED.get(secSel,laySel,comSel),"same");
                  if (histogramsFTHodo.H_FADC_RAW_PUL.hasEntry(secSel,laySel,comSel))
                     this.canvasEvent.draw(histogramsFTHodo.H_FADC_RAW_PUL.get(secSel,laySel,comSel),"same");
-                 //if (histogramsFTHodo.G_FADC_ANALYSIS.hasEntry(secSel,laySel,comSel)){
-                 //   if (histogramsFTHodo.G_FADC_ANALYSIS.get(secSel,laySel,comSel).getDataSize(1)>1)   
-                 //       this.canvasEvent.draw(histogramsFTHodo.G_FADC_ANALYSIS.get(secSel, laySel, comSel),"same");
-                 //}
+                 if (histogramsFTHodo.G_FADC_ANALYSIS.hasEntry(secSel,laySel,comSel)){
+                    if (histogramsFTHodo.G_FADC_ANALYSIS.get(secSel,laySel,comSel).getDataSize(1)>1)   
+                        this.canvasEvent.draw(histogramsFTHodo.G_FADC_ANALYSIS.get(secSel, laySel, comSel),"same");
+                 }
         }
         canvasEvent.cd(oppCDL);
         if (histogramsFTHodo.H_FADC_RAW.hasEntry(secSel,oppSel,comSel)){
@@ -935,10 +935,10 @@ public class FTHODOModule extends JPanel implements CalibrationConstantsListener
                     this.canvasEvent.draw(histogramsFTHodo.H_FADC_RAW_PED.get(secSel,oppSel,comSel),"same");
                  if (histogramsFTHodo.H_FADC_RAW_PUL.hasEntry(secSel,oppSel,comSel))
                     this.canvasEvent.draw(histogramsFTHodo.H_FADC_RAW_PUL.get(secSel,oppSel,comSel),"same");
-                 //if (histogramsFTHodo.G_FADC_ANALYSIS.hasEntry(secSel,oppSel,comSel)){
-                 //   if (histogramsFTHodo.G_FADC_ANALYSIS.get(secSel,oppSel,comSel).getDataSize(1)>1)   
-                 //       this.canvasEvent.draw(histogramsFTHodo.G_FADC_ANALYSIS.get(secSel, oppSel, comSel),"same");
-                 //}
+                 if (histogramsFTHodo.G_FADC_ANALYSIS.hasEntry(secSel,oppSel,comSel)){
+                    if (histogramsFTHodo.G_FADC_ANALYSIS.get(secSel,oppSel,comSel).getDataSize(1)>1)   
+                        this.canvasEvent.draw(histogramsFTHodo.G_FADC_ANALYSIS.get(secSel, oppSel, comSel),"same");
+                 }
         }
 
         //----------------------------------------
@@ -2886,7 +2886,7 @@ public class FTHODOModule extends JPanel implements CalibrationConstantsListener
                     histogramsFTHodo.H_FADC_RAW.get(sec, lay, com).reset();
                     histogramsFTHodo.H_FADC_RAW_PED.get(sec, lay, com).reset();
                     histogramsFTHodo.H_FADC_RAW_PUL.get(sec, lay, com).reset();
-//                    histogramsFTHodo.G_FADC_ANALYSIS.get(sec, lay, com).reset();
+                    histogramsFTHodo.G_FADC_ANALYSIS.get(sec, lay, com).reset();
                     histogramsFTHodo.H_VT.get(sec, lay, com).reset();
                     histogramsFTHodo.H_NPE.get(sec, lay, com).reset();
                     
@@ -2951,17 +2951,17 @@ public class FTHODOModule extends JPanel implements CalibrationConstantsListener
                             && pedMeanGood) {
                         compEvntPed = pedMean[sec][lay][com];
                     }
-//                    histogramsFTHodo.G_FADC_ANALYSIS.get(sec, lay, com).addPoint(ped_i1+1.5,counter.getADCData(0).getPedestal(),0,0);
-//                    histogramsFTHodo.G_FADC_ANALYSIS.get(sec, lay, com).addPoint(ped_i2+0.5,counter.getADCData(0).getPedestal(),0,0);
-//                    histogramsFTHodo.G_FADC_ANALYSIS.get(sec, lay, com).addPoint(pul_i1+0.5,counter.getADCData(0).getPulseValue(pul_i1),0,0);
-//                    histogramsFTHodo.G_FADC_ANALYSIS.get(sec, lay, com).addPoint(pul_i2+0.5,counter.getADCData(0).getPulseValue(pul_i2),0,0);
-//                    if(counter.getADCData(0).getHeight()-counter.getADCData(0).getPedestal()>this.detectorDecoder.getFadcPanel().tet){
-//                        histogramsFTHodo.G_FADC_ANALYSIS.get(sec, lay, com).addPoint(counter.getADCData(0).getThresholdCrossing()+0.5,counter.getADCData(0).
-//                              getPulseValue(counter.getADCData(0).getThresholdCrossing()),0,0);
-//                        histogramsFTHodo.G_FADC_ANALYSIS.get(sec, lay, com).addPoint(counter.getADCData(0).getTime()/histogramsFTHodo.nsPerSample +0.5,
-//                                                                                    (counter.getADCData(0).getHeight()+ counter.getADCData(0).getPedestal())/2,0,0);
-//                        histogramsFTHodo.G_FADC_ANALYSIS.get(sec, lay, com).addPoint(counter.getADCData(0).getPosition()+0.5,counter.getADCData(0).getHeight(),0,0);
-//                    }
+                    histogramsFTHodo.G_FADC_ANALYSIS.get(sec, lay, com).addPoint(ped_i1+1.5,counter.getADCData(0).getPedestal(),0,0);
+                    histogramsFTHodo.G_FADC_ANALYSIS.get(sec, lay, com).addPoint(ped_i2+0.5,counter.getADCData(0).getPedestal(),0,0);
+                    histogramsFTHodo.G_FADC_ANALYSIS.get(sec, lay, com).addPoint(pul_i1+0.5,counter.getADCData(0).getPulseValue(pul_i1),0,0);
+                    histogramsFTHodo.G_FADC_ANALYSIS.get(sec, lay, com).addPoint(pul_i2+0.5,counter.getADCData(0).getPulseValue(pul_i2),0,0);
+                    if(counter.getADCData(0).getHeight()-counter.getADCData(0).getPedestal()>this.detectorDecoder.getFadcPanel().tet){
+                        histogramsFTHodo.G_FADC_ANALYSIS.get(sec, lay, com).addPoint(counter.getADCData(0).getThresholdCrossing()+0.5,counter.getADCData(0).
+                              getPulseValue(counter.getADCData(0).getThresholdCrossing()),0,0);
+                        histogramsFTHodo.G_FADC_ANALYSIS.get(sec, lay, com).addPoint(counter.getADCData(0).getTime()/histogramsFTHodo.nsPerSample +0.5,
+                                                                                    (counter.getADCData(0).getHeight()+ counter.getADCData(0).getPedestal())/2,0,0);
+                        histogramsFTHodo.G_FADC_ANALYSIS.get(sec, lay, com).addPoint(counter.getADCData(0).getPosition()+0.5,counter.getADCData(0).getHeight(),0,0);
+                    }
                     
                     // Loop through fADC bins filling event-by-event histograms
                     for (int i = 0;i < min(pulse.length, histogramsFTHodo.H_FADC.get(sec, lay, com).getAxis().getNBins()); i++) {

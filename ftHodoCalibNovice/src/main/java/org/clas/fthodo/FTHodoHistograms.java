@@ -25,7 +25,7 @@ public class FTHodoHistograms {
     DetectorCollection<H1F> H_FADC_RAW = new DetectorCollection<H1F>(); //  pulse
     DetectorCollection<H1F> H_FADC_RAW_PED = new DetectorCollection<H1F>(); //
     DetectorCollection<H1F> H_FADC_RAW_PUL = new DetectorCollection<H1F>(); //
-//    DetectorCollection<GraphErrors> G_FADC_ANALYSIS = new DetectorCollection<GraphErrors>();
+    DetectorCollection<GraphErrors> G_FADC_ANALYSIS = new DetectorCollection<GraphErrors>();
 
     DetectorCollection<H1F> H_FADC = new DetectorCollection<H1F>(); // baseline subtracted pulse calibrated to voltage and time
     DetectorCollection<H1F> H_VT = new DetectorCollection<H1F>();   // '' calibrated to no. photoelectrons and time
@@ -178,14 +178,14 @@ public class FTHodoHistograms {
         H_FADC_RAW_PUL.get(HP.getS(), HP.getL(), HP.getC()).setTitleY("fADC raw Amplitude");
         H_FADC_RAW_PUL.get(HP.getS(), HP.getL(), HP.getC()).setFillColor(46);
         
-//        G_FADC_ANALYSIS.add(HP.getS(), HP.getL(), HP.getC(), new GraphErrors());
-//        G_FADC_ANALYSIS.get(HP.getS(), HP.getL(), HP.getC()).setTitle(DetectorDescriptor.getName("G_FADC_ANALYSIS",HP.getS(),HP.getL(),HP.getC())); //  title
-//        G_FADC_ANALYSIS.get(HP.getS(), HP.getL(), HP.getC()).setTitleX("fADC Time");
-//        G_FADC_ANALYSIS.get(HP.getS(), HP.getL(), HP.getC()).setTitleY("fADC raw Amplitude");
-//        G_FADC_ANALYSIS.get(HP.getS(), HP.getL(), HP.getC()).setMarkerColor(1); // color from 0-9 for given palette
-//        G_FADC_ANALYSIS.get(HP.getS(), HP.getL(), HP.getC()).setMarkerSize(2); // size in points on the screen
-//        G_FADC_ANALYSIS.get(HP.getS(), HP.getL(), HP.getC()).addPoint(0, 200, 0, 0);
-//        G_FADC_ANALYSIS.get(HP.getS(), HP.getL(), HP.getC()).addPoint(100, 200, 0, 0);
+        G_FADC_ANALYSIS.add(HP.getS(), HP.getL(), HP.getC(), new GraphErrors());
+        G_FADC_ANALYSIS.get(HP.getS(), HP.getL(), HP.getC()).setTitle(DetectorDescriptor.getName("G_FADC_ANALYSIS",HP.getS(),HP.getL(),HP.getC())); //  title
+        G_FADC_ANALYSIS.get(HP.getS(), HP.getL(), HP.getC()).setTitleX("fADC Time");
+        G_FADC_ANALYSIS.get(HP.getS(), HP.getL(), HP.getC()).setTitleY("fADC raw Amplitude");
+        G_FADC_ANALYSIS.get(HP.getS(), HP.getL(), HP.getC()).setMarkerColor(1); // color from 0-9 for given palette
+        G_FADC_ANALYSIS.get(HP.getS(), HP.getL(), HP.getC()).setMarkerSize(2); // size in points on the screen
+        G_FADC_ANALYSIS.get(HP.getS(), HP.getL(), HP.getC()).addPoint(0, 200, 0, 0);
+        G_FADC_ANALYSIS.get(HP.getS(), HP.getL(), HP.getC()).addPoint(100, 200, 0, 0);
 
         H_VT.add(HP.getS(), HP.getL(), HP.getC(), new H1F(DetectorDescriptor.getName("H_VT", HP.getS(), HP.getL(),HP.getC()),
                          HP.getTitle(), 100, 0.0, 400.0));
@@ -426,7 +426,7 @@ public class FTHodoHistograms {
             H_FADC_RAW_PUL.get(HP.getS(),HP.getL(),HP.getC()).reset();
             H_NOISE_V.get(HP.getS(),HP.getL(),HP.getC()).reset();
             H_T_MODE7.get(HP.getS(),HP.getL(),HP.getC()).reset();
-            //G_FADC_ANALYSIS.get(HP.getS(), HP.getL(), HP.getC()).reset();
+            G_FADC_ANALYSIS.get(HP.getS(), HP.getL(), HP.getC()).reset();
             
             H_PED.get(HP.getS(),HP.getL(),HP.getC()).reset();
             H_COSMIC_fADC.get(HP.getS(),HP.getL(),HP.getC()).reset();
