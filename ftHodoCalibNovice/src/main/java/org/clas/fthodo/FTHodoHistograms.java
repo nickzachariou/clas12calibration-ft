@@ -5,6 +5,7 @@
  */
 package org.clas.fthodo;
 
+import org.jlab.groot.group.DataGroup;
 import org.jlab.detector.base.DetectorCollection;
 import org.jlab.detector.base.DetectorDescriptor;
 import org.jlab.groot.data.GraphErrors;
