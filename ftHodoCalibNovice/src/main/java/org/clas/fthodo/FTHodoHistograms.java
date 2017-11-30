@@ -11,9 +11,11 @@ import org.jlab.detector.base.DetectorDescriptor;
 import org.jlab.groot.data.GraphErrors;
 import org.jlab.groot.data.H1F;
 import org.jlab.groot.data.H2F;
+import org.jlab.groot.data.IDataSet;
 import org.jlab.groot.math.F1D;
 import org.jlab.groot.fitter.DataFitter;
 import org.jlab.groot.math.F1D;
+import org.jlab.utils.groups.IndexedList;
 
 public class FTHodoHistograms {
     FTHodoHistParams HP=new FTHodoHistParams();
@@ -23,11 +25,16 @@ public class FTHodoHistograms {
     //---------------
     // Event-by-Event
     // raw pulse
-    DetectorCollection<H1F> H_FADC_RAW = new DetectorCollection<H1F>(); //  pulse
+    
+   
+    //// start to replace these with the datagroup instead of collection
+    IndexedList<DataGroup> dataGroups = new IndexedList<DataGroup>(3);
+    
+    DetectorCollection<H1F> H_FADC_RAW = new DetectorCollection<H1F>(); //  pulse   
     DetectorCollection<H1F> H_FADC_RAW_PED = new DetectorCollection<H1F>(); //
     DetectorCollection<H1F> H_FADC_RAW_PUL = new DetectorCollection<H1F>(); //
 //    DetectorCollection<GraphErrors> G_FADC_ANALYSIS = new DetectorCollection<GraphErrors>();
-    DetectorCollection<H1F> H_FADC = new DetectorCollection<H1F>(); // baseline subtracted pulse calibrated to voltage and time
+
     DetectorCollection<H1F> H_VT = new DetectorCollection<H1F>();   // '' calibrated to no. photoelectrons and time
     DetectorCollection<H1F> H_NPE = new DetectorCollection<H1F>();    // Semi Accumulated
     DetectorCollection<H1F> H_PED_TEMP = new DetectorCollection<H1F>();     // Accumulated
@@ -153,19 +160,22 @@ public class FTHodoHistograms {
     double[][][][] pey_H_PED_VS_EVENT = new double[8][2][20][nPointsPed];
     double[] timeMin = {0., 100., 100.};
     double[] timeMax = {500., 150., 150.};
-    
+
     
     private void setHistogramsHodo(int index) {
         char detector = 'h';
         HP.setAllParameters(index, detector);
-        //----------------------------
-        // Event-by-Event Histograms
-        H_FADC.add(HP.getS(), HP.getL(), HP.getC(),
-                   new H1F(DetectorDescriptor.getName("H_FADC",HP.getS(),HP.getL(),HP.getC()),HP.getTitle(), 100, 0.0, 100.0));
-        H_FADC.get(HP.getS(), HP.getL(), HP.getC()).setFillColor(4);
-        H_FADC.get(HP.getS(), HP.getL(), HP.getC()).setTitleX("fADC Time");
-        H_FADC.get(HP.getS(), HP.getL(), HP.getC()).setTitleY("fADC Amplitude (ped sub)");
-        H_FADC_RAW.add(HP.getS(), HP.getL(), HP.getC(), new H1F(DetectorDescriptor.getName("H_FADC_RAW",HP.getS(),HP.getL(),HP.getC()),HP.getTitle(), 100, 0.0, 100.0));
+
+        H1F H_FADC = new H1F("H_FADC", HP.getTitle(), 100, 0.0, 100.0);   
+        H_FADC.setFillColor(4);
+        H_FADC.setTitleX("fADC Time");
+        H_FADC.setTitleY("fADC Amplitude (ped sub)");
+        
+        DataGroup dg = new DataGroup();  // ncols and nrows worth adding?
+        dg.addDataSet(H_FADC, 0);  // order 0?
+        dataGroups.add(dg, HP.getS(), HP.getL(), HP.getC());
+       
+        H_FADC_RAW.add(HP.getS(), HP.getL(), HP.getC(), new H1F(DetectorDescriptor.getName("H_FADC_RAW",HP.getS(),HP.getL(),HP.getC()),HP.getTitle(), 100, 0.0, 100.0));     
         H_FADC_RAW.get(HP.getS(), HP.getL(), HP.getC()).setFillColor(4);
         H_FADC_RAW.get(HP.getS(), HP.getL(), HP.getC()).setTitleX("fADC Time");
         H_FADC_RAW.get(HP.getS(), HP.getL(), HP.getC()).setTitleY("fADC raw Amplitude");
@@ -386,12 +396,14 @@ public class FTHodoHistograms {
         HP.setAllParameters(index, detector);
         if (detector == 'h') {
             
+            this.dataGroups.getItem(HP.getS(),HP.getL(),HP.getC()).getH1F(DetectorDescriptor.getName("H_FADC", HP.getS(),HP.getL(),HP.getC())).reset();
+            //H_FADC.get(HP.getS(),HP.getL(),HP.getC()).reset();
+            
             H_MIP_Q.get(HP.getS(),HP.getL(),HP.getC()).reset();
             H_MIP_Q_MatchingTiles.get(HP.getS(),HP.getL(),HP.getC()).reset();
             H_NOISE_Q.get(HP.getS(),HP.getL(),HP.getC()).reset();
             H_NPE_INT.get(HP.getS(),HP.getL(),HP.getC()).reset();
-            H_NPE_MATCH.get(HP.getS(),  HP.getL(),  HP.getC()).reset();
-            H_FADC.get(HP.getS(),HP.getL(),HP.getC()).reset();
+            H_NPE_MATCH.get(HP.getS(),  HP.getL(),  HP.getC()).reset();            
             H_FADC_RAW.get(HP.getS(),HP.getL(),HP.getC()).reset();
             H_FADC_RAW_PED.get(HP.getS(),HP.getL(),HP.getC()).reset();
             H_FADC_RAW_PUL.get(HP.getS(),HP.getL(),HP.getC()).reset();

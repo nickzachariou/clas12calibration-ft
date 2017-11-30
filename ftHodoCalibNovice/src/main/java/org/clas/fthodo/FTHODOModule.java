@@ -48,10 +48,12 @@ import org.jlab.utils.groups.IndexedTable;
 import org.jlab.groot.data.H1F;
 import org.jlab.groot.math.F1D;
 import org.clas.ft.tools.FTAdjustFit;
+import org.jlab.groot.group.DataGroup;
 
 public class FTHODOModule extends JPanel implements CalibrationConstantsListener, ActionListener, DetectorListener, ChangeListener {
 
     FTHodoWire wireFTHodo = new FTHodoWire();    
+            
     CodaEventDecoder             decoder = new CodaEventDecoder();
     DetectorEventDecoder detectorDecoder = new DetectorEventDecoder();
     //=================================
@@ -79,6 +81,7 @@ public class FTHODOModule extends JPanel implements CalibrationConstantsListener
     // Gagik to implement
     // view.addChangeListener(this);
     ColorPalette palette = new ColorPalette();
+    
     FTHodoHistograms histogramsFTHodo = new FTHodoHistograms();
     //=================================
     //           ARRAYS
@@ -946,22 +949,28 @@ public class FTHODOModule extends JPanel implements CalibrationConstantsListener
         // Middle top (bottom) for thin (thick) layer
         //  fADC pulse pedestal subtracted
         canvasEvent.cd(layCDM);
-        if (histogramsFTHodo.H_FADC.hasEntry(secSel, laySel, comSel)) {
-            this.canvasEvent.draw(histogramsFTHodo.H_FADC.get(secSel,laySel,comSel));
+        
+        H1F h_fadc1 = histogramsFTHodo.dataGroups.getItem(secSel,laySel,comSel).getH1F("H_FADC");        
+        if (h_fadc1 != null){  // better way to do this?
+            this.canvasEvent.draw(h_fadc1);
             if (histogramsFTHodo.fThr.hasEntry(secSel,laySel,comSel)) {
                 this.canvasEvent.draw(histogramsFTHodo.fThr.get(secSel,laySel,comSel), "same");
             }
         }
+
         //----------------------------------------
         // Middle top (bottom) for thin (thick) layer
         //  fADC pulse pedestal Subtracted
         canvasEvent.cd(oppCDM);
-        if (histogramsFTHodo.H_FADC.hasEntry(secSel,oppSel,comSel)) {
-            this.canvasEvent.draw(histogramsFTHodo.H_FADC.get(secSel,oppSel,comSel));
+
+        H1F h_fadc2 = histogramsFTHodo.dataGroups.getItem(secSel,oppSel,comSel).getH1F("H_FADC");   
+        if (h_fadc2 != null){ // better way to do this?
+            this.canvasEvent.draw(h_fadc2);
             if (histogramsFTHodo.fThr.hasEntry(secSel,oppSel,comSel)) {
                 this.canvasEvent.draw(histogramsFTHodo.fThr.get(secSel,oppSel,comSel), "same");
             }
         }
+
         //----------------------------------------
         // right top (bottom) for thin (thick) layer
         canvasEvent.cd(layCDR);
@@ -2906,7 +2915,7 @@ public class FTHODOModule extends JPanel implements CalibrationConstantsListener
                     double baselineSubRaw;
                     int eventloop;
                     // reset non-accumulating histograms
-                    histogramsFTHodo.H_FADC.get(sec, lay, com).reset();
+                    histogramsFTHodo.dataGroups.getItem(secSel,laySel,comSel).getH1F("H_FADC").reset();
                     histogramsFTHodo.H_FADC_RAW.get(sec, lay, com).reset();
                     histogramsFTHodo.H_FADC_RAW_PED.get(sec, lay, com).reset();
                     histogramsFTHodo.H_FADC_RAW_PUL.get(sec, lay, com).reset();
@@ -2989,9 +2998,8 @@ public class FTHODOModule extends JPanel implements CalibrationConstantsListener
 //                                                                                    (counter.getADCData(0).getHeight()+ counter.getADCData(0).getPedestal())/2,0,0);
 //                        histogramsFTHodo.G_FADC_ANALYSIS.get(sec, lay, com).addPoint(counter.getADCData(0).getPosition()+0.5,counter.getADCData(0).getHeight(),0,0);
 //                    }
-                    
                     // Loop through fADC bins filling event-by-event histograms
-                    for (int i = 0;i < min(pulse.length, histogramsFTHodo.H_FADC.get(sec, lay, com).getAxis().getNBins()); i++) {
+                    for (int i = 0;i < min(pulse.length, histogramsFTHodo.dataGroups.getItem(sec, lay, com).getH1F("H_FADC").getAxis().getNBins()); i++) {
                         if (i == 100) {
                             System.out.println(" pulse[" + i + "] = " + pulse[i]);
                         }
@@ -3003,7 +3011,7 @@ public class FTHODOModule extends JPanel implements CalibrationConstantsListener
                         
                         // Baseline unsubtracted
                         baselineSubRaw = pulse[i] - compEvntPed + histogramsFTHodo.PedOffset;
-                        histogramsFTHodo.H_FADC.get(sec, lay, com).fill(i, baselineSubRaw);
+                        histogramsFTHodo.dataGroups.getItem(sec, lay, com).getH1F("H_FADC").fill(i, baselineSubRaw);
                         calibratedWave = (pulse[i] - compEvntPed) * histogramsFTHodo.LSB +  histogramsFTHodo.vPedOffset;
                         histogramsFTHodo.H_VT.get(sec, lay, com).fill(i * 4, calibratedWave);
                         npeWave = (pulse[i] - compEvntPed) * histogramsFTHodo.LSB / histogramsFTHodo.voltsPerSPE;
