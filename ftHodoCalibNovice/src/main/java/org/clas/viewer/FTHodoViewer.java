@@ -17,12 +17,8 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
-
-
 import org.clas.fthodo.FTHODOModule;
-
 import org.jlab.detector.base.DetectorType;
-
 import org.jlab.io.base.DataEvent;
 import org.jlab.io.base.DataEventType;
 import org.jlab.io.evio.EvioDataEvent;
@@ -44,15 +40,15 @@ public class FTHodoViewer implements IDataEventListener, ActionListener {
     JMenuBar          menuBar = null;
     DataSourceProcessorPane evPane = new DataSourceProcessorPane();
     int          nProcessed = 0;
-    String workDir         = null;
+    //String workDir         = null;
    
     public FTHodoViewer() {
         this.initDetector();
         this.initHistograms();
         this.initArrays();
         this.initMenu();
-        this.workDir = System.getProperty("user.dir");
-        System.out.println("\nCurrent work directory set to:" + this.workDir);
+        moduleFTHODO.workDir = System.getProperty("user.dir");
+        //System.out.println("\nCurrent work directory set to:" + this.workDir);
 
         
         this.evPane.addEventListener(this);
@@ -119,12 +115,25 @@ public class FTHodoViewer implements IDataEventListener, ActionListener {
         menuBar.add(file);
         
         JMenu fit = new JMenu("Fit");
-        menuItem = new JMenuItem("Adjust Noise fit...");
-        menuItem.getAccessibleContext().setAccessibleDescription("Adjust fit parameters and range");
+        menuItem = new JMenuItem("Adjust fit...");
+        menuItem.getAccessibleContext().setAccessibleDescription("Adjust fit parameters for distribution in Tab");
         menuItem.addActionListener(this);
         fit.add(menuItem);
-        menuItem = new JMenuItem("Update Constants...");
+        menuItem = new JMenuItem("Update constants...");
         menuItem.getAccessibleContext().setAccessibleDescription("Update constants from adjusted fit");
+        menuItem.addActionListener(this);
+        fit.add(menuItem);
+        //HERE-NEW
+        menuItem = new JMenuItem("Set new global fit parameters...");
+        menuItem.getAccessibleContext().setAccessibleDescription("Set new fit parameters for all functions");
+        menuItem.addActionListener(this);
+        fit.add(menuItem);
+        menuItem = new JMenuItem("Use new global fit parameters...");
+        menuItem.getAccessibleContext().setAccessibleDescription("Use the newly chosen fit parameters for all functions");
+        menuItem.addActionListener(this);
+        fit.add(menuItem);
+        menuItem = new JMenuItem("Use default global fit parameters...");
+        menuItem.getAccessibleContext().setAccessibleDescription("Use the new fit parameters for all functions");
         menuItem.addActionListener(this);
         fit.add(menuItem);
 
@@ -140,10 +149,11 @@ public class FTHodoViewer implements IDataEventListener, ActionListener {
         settings.add(menuItem);
         menuBar.add(settings);
         
-        
-        
-        
-        
+        menuItem = new JMenuItem("Choose work directory...");
+        menuItem.getAccessibleContext().setAccessibleDescription("Set analysis work directory");
+        menuItem.addActionListener(this);
+        settings.add(menuItem);
+        this.menuBar.add(settings);
     }
     private void resetHistograms() {
         moduleFTHODO.resetHistograms();
@@ -177,7 +187,7 @@ public class FTHodoViewer implements IDataEventListener, ActionListener {
     }
     
     public String getAuthor() {
-        return "Gary Smith";
+        return "Nicholas Zachariou";
     }
     
     public DetectorType getType() {
@@ -195,14 +205,96 @@ public class FTHodoViewer implements IDataEventListener, ActionListener {
     public void actionPerformed(ActionEvent e) {
         System.out.println("FTViewer ACTION = " + e.getActionCommand());
         if(e.getActionCommand().compareTo("Open evio files...")==0) this.readFiles();
-        
-        if(e.getActionCommand() == "Adjust Noise fit...") {
+
+        if(e.getActionCommand() == "Adjust fit...") {
             //System.out.println("Adjusting fits for module " + this.modules.get(moduleParSelect).getName());
             moduleFTHODO.adjustFit();
         }
-        if(e.getActionCommand() == "Update Constants...") {
+        if(e.getActionCommand() == "Update constants...") {
             //System.out.println("Adjusting fits for module " + this.modules.get(moduleParSelect).getName());
             moduleFTHODO.adjustFitConstants();
+        }
+        if(e.getActionCommand() == "Set new global fit parameters...") {
+            //System.out.println("Adjusting fits for module " + this.modules.get(moduleParSelect).getName());
+            moduleFTHODO.adjustFitParameters();
+        }
+        //HERE--
+        if(e.getActionCommand() == "Use new global fit parameters...") {
+            //System.out.println("Adjusting fits for module " + this.modules.get(moduleParSelect).getName());
+            moduleFTHODO.SetFitParameters(true);
+        }
+        if(e.getActionCommand() == "Use default global fit parameters...") {
+            //System.out.println("Adjusting fits for module " + this.modules.get(moduleParSelect).getName());
+            moduleFTHODO.SetFitParameters(false);
+        }
+
+        
+//        if(e.getActionCommand() == "Adjust Noise mV fit...") {
+//            //System.out.println("Adjusting fits for module " + this.modules.get(moduleParSelect).getName());
+//            moduleFTHODO.adjustNoisemvFit();
+//        }
+//        if(e.getActionCommand() == "Update Noise mV constants...") {
+//            //System.out.println("Adjusting fits for module " + this.modules.get(moduleParSelect).getName());
+//            moduleFTHODO.adjustNoisemVFitConstants();
+//        }
+//        if(e.getActionCommand() == "Adjust Noise charge fit...") {
+//            //System.out.println("Adjusting fits for module " + this.modules.get(moduleParSelect).getName());
+//            moduleFTHODO.adjustNoisechargeFit();
+//        }
+//        if(e.getActionCommand() == "Update Noise charge constants...") {
+//            //System.out.println("Adjusting fits for module " + this.modules.get(moduleParSelect).getName());
+//            moduleFTHODO.adjustNoisechargeFitConstants();
+//        }
+//
+//        if(e.getActionCommand() == "Adjust MIP mV fit...") {
+//            //System.out.println("Adjusting fits for module " + this.modules.get(moduleParSelect).getName());
+//            moduleFTHODO.adjustMIPmvFit();
+//        }
+//        if(e.getActionCommand() == "Update MIP mV constants...") {
+//            //System.out.println("Adjusting fits for module " + this.modules.get(moduleParSelect).getName());
+//            moduleFTHODO.adjustMIPmVFitConstants();
+//        }
+//        if(e.getActionCommand() == "Adjust MIP charge fit...") {
+//            //System.out.println("Adjusting fits for module " + this.modules.get(moduleParSelect).getName());
+//            moduleFTHODO.adjustMIPchargeFit();
+//        }
+//        if(e.getActionCommand() == "Update MIP charge constants...") {
+//            //System.out.println("Adjusting fits for module " + this.modules.get(moduleParSelect).getName());
+//            moduleFTHODO.adjustMIPchargeFitConstants();
+//        }
+//        if(e.getActionCommand() == "Adjust MIP mV Matching Tiles fit...") {
+//            //System.out.println("Adjusting fits for module " + this.modules.get(moduleParSelect).getName());
+//            moduleFTHODO.adjustMIPmvMatchingTilesFit();
+//        }
+//        if(e.getActionCommand() == "Update MIP mV Matching Tiles constants...") {
+//            //System.out.println("Adjusting fits for module " + this.modules.get(moduleParSelect).getName());
+//            moduleFTHODO.adjustMIPmVMatchingTilesFitConstants();
+//        }
+//        if(e.getActionCommand() == "Adjust MIP charge Matching Tiles fit...") {
+//            //System.out.println("Adjusting fits for module " + this.modules.get(moduleParSelect).getName());
+//            moduleFTHODO.adjustMIPchargeMatchingTilesFit();
+//        }
+//        if(e.getActionCommand() == "Update MIP charge Matching Tiles constants...") {
+//            //System.out.println("Adjusting fits for module " + this.modules.get(moduleParSelect).getName());
+//            moduleFTHODO.adjustMIPchargeMatchingTilesFitConstants();
+//        }
+        
+        
+        if(e.getActionCommand().compareTo("Choose work directory...")==0) {
+            //System.out.println("\nYOooooooo");
+            String filePath = moduleFTHODO.workDir;
+            JFileChooser fc = new JFileChooser();
+            fc.setDialogTitle("Choose work directory...");
+            fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+            fc.setAcceptAllFileFilterUsed(false);
+            File workingDirectory = new File(moduleFTHODO.workDir);
+            fc.setCurrentDirectory(workingDirectory);
+            int returnValue = fc.showOpenDialog(null);
+            if (returnValue == JFileChooser.APPROVE_OPTION) {
+                filePath = fc.getSelectedFile().getAbsolutePath();
+            }
+            moduleFTHODO.workDir = filePath;
+            System.out.println("\nCurrent work directory set to:" + moduleFTHODO.workDir);
         }
     }
     
@@ -212,7 +304,7 @@ public class FTHodoViewer implements IDataEventListener, ActionListener {
         fc.setDialogTitle("Choose input files directory...");
         fc.setMultiSelectionEnabled(true);
         fc.setAcceptAllFileFilterUsed(false);
-        File workingDirectory = new File(this.workDir);
+        File workingDirectory = new File(moduleFTHODO.workDir);
         fc.setCurrentDirectory(workingDirectory);
         int returnValue = fc.showOpenDialog(null);
         if (returnValue == JFileChooser.APPROVE_OPTION) {
