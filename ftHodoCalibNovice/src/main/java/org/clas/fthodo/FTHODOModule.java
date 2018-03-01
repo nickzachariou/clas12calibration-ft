@@ -56,11 +56,8 @@ import org.jlab.utils.groups.IndexedTable;
 import org.jlab.groot.data.H1F;
 import org.jlab.groot.math.F1D;
 import org.clas.ft.tools.FTAdjustFit;
-<<<<<<< HEAD
 import org.jlab.groot.group.DataGroup;
-=======
 import org.clas.ft.tools.FTAdjustFitParams;
->>>>>>> master
 
 public class FTHODOModule extends JPanel implements CalibrationConstantsListener, ActionListener, DetectorListener, ChangeListener {
     FTHodoWire wireFTHodo = new FTHodoWire();    
@@ -3548,7 +3545,7 @@ public class FTHODOModule extends JPanel implements CalibrationConstantsListener
             int s=histogramsFTHodo.HP.getS();
             int l=histogramsFTHodo.HP.getL();
             int c=histogramsFTHodo.HP.getC();
-            histogramsFTHodo.H_FADC.get(s, l, c).reset();
+            histogramsFTHodo.dataGroups.getItem(s,l,c).getH1F("H_FADC").reset();
             histogramsFTHodo.H_FADC_RAW.get(s, l, c).reset();
             histogramsFTHodo.H_FADC_RAW_PED.get(s, l, c).reset();
             histogramsFTHodo.H_FADC_RAW_PUL.get(s, l, c).reset();
@@ -3924,21 +3921,17 @@ public class FTHODOModule extends JPanel implements CalibrationConstantsListener
                     double baselineSubRaw;
                     int eventloop;
                     // reset non-accumulating histograms
-<<<<<<< HEAD
-                    histogramsFTHodo.dataGroups.getItem(secSel,laySel,comSel).getH1F("H_FADC").reset();
-                    histogramsFTHodo.H_FADC_RAW.get(sec, lay, com).reset();
-                    histogramsFTHodo.H_FADC_RAW_PED.get(sec, lay, com).reset();
-                    histogramsFTHodo.H_FADC_RAW_PUL.get(sec, lay, com).reset();
-//                    histogramsFTHodo.G_FADC_ANALYSIS.get(sec, lay, com).reset();
-                    histogramsFTHodo.H_VT.get(sec, lay, com).reset();
-=======
+                    
+                    //how it will work for datagroups
+                    //TODO move to resetEventObjects
+                    //histogramsFTHodo.dataGroups.getItem(secSel,laySel,comSel).getH1F("H_FADC").reset();
+
                     //histogramsFTHodo.H_FADC.get(sec, lay, com).reset();
                     //histogramsFTHodo.H_FADC_RAW.get(sec, lay, com).reset();
                     //histogramsFTHodo.H_FADC_RAW_PED.get(sec, lay, com).reset();
                     //histogramsFTHodo.H_FADC_RAW_PUL.get(sec, lay, com).reset();
                     //histogramsFTHodo.G_FADC_ANALYSIS.get(sec, lay, com).reset();
                     //histogramsFTHodo.H_VT.get(sec, lay, com).reset();
->>>>>>> master
                     histogramsFTHodo.H_NPE.get(sec, lay, com).reset();
                     
                     
@@ -4005,19 +3998,6 @@ public class FTHODOModule extends JPanel implements CalibrationConstantsListener
                             && pedMeanGood) {
                         compEvntPed = pedMean[sec][lay][com];
                     }
-<<<<<<< HEAD
-//                    histogramsFTHodo.G_FADC_ANALYSIS.get(sec, lay, com).addPoint(ped_i1+1.5,counter.getADCData(0).getPedestal(),0,0);
-//                    histogramsFTHodo.G_FADC_ANALYSIS.get(sec, lay, com).addPoint(ped_i2+0.5,counter.getADCData(0).getPedestal(),0,0);
-//                    histogramsFTHodo.G_FADC_ANALYSIS.get(sec, lay, com).addPoint(pul_i1+0.5,counter.getADCData(0).getPulseValue(pul_i1),0,0);
-//                    histogramsFTHodo.G_FADC_ANALYSIS.get(sec, lay, com).addPoint(pul_i2+0.5,counter.getADCData(0).getPulseValue(pul_i2),0,0);
-//                    if(counter.getADCData(0).getHeight()-counter.getADCData(0).getPedestal()>this.detectorDecoder.getFadcPanel().tet){
-//                        histogramsFTHodo.G_FADC_ANALYSIS.get(sec, lay, com).addPoint(counter.getADCData(0).getThresholdCrossing()+0.5,counter.getADCData(0).
-//                              getPulseValue(counter.getADCData(0).getThresholdCrossing()),0,0);
-//                        histogramsFTHodo.G_FADC_ANALYSIS.get(sec, lay, com).addPoint(counter.getADCData(0).getTime()/histogramsFTHodo.nsPerSample +0.5,
-//                                                                                    (counter.getADCData(0).getHeight()+ counter.getADCData(0).getPedestal())/2,0,0);
-//                        histogramsFTHodo.G_FADC_ANALYSIS.get(sec, lay, com).addPoint(counter.getADCData(0).getPosition()+0.5,counter.getADCData(0).getHeight(),0,0);
-//                    }
-=======
                     //                    histogramsFTHodo.G_FADC_ANALYSIS.get(sec, lay, com).addPoint(ped_i1+1.5,counter.getADCData(0).getPedestal(),0,0);
                     //                    histogramsFTHodo.G_FADC_ANALYSIS.get(sec, lay, com).addPoint(ped_i2+0.5,counter.getADCData(0).getPedestal(),0,0);
                     //                    histogramsFTHodo.G_FADC_ANALYSIS.get(sec, lay, com).addPoint(pul_i1+0.5,counter.getADCData(0).getPulseValue(pul_i1),0,0);
@@ -4029,8 +4009,6 @@ public class FTHODOModule extends JPanel implements CalibrationConstantsListener
                     //                                                                                    (counter.getADCData(0).getHeight()+ counter.getADCData(0).getPedestal())/2,0,0);
                     //                        histogramsFTHodo.G_FADC_ANALYSIS.get(sec, lay, com).addPoint(counter.getADCData(0).getPosition()+0.5,counter.getADCData(0).getHeight(),0,0);
                     //                    }
-                    
->>>>>>> master
                     // Loop through fADC bins filling event-by-event histograms
                     for (int i = 0;i < min(pulse.length, histogramsFTHodo.dataGroups.getItem(sec, lay, com).getH1F("H_FADC").getAxis().getNBins()); i++) {
                         if (i == 100) {
