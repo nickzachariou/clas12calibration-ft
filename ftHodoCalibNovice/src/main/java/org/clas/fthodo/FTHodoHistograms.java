@@ -26,15 +26,8 @@ public class FTHodoHistograms {
     
    
     //// start to replace these with the datagroup instead of collection
-    IndexedList<DataGroup> dataGroups = new IndexedList<DataGroup>(3);
-    
-    DetectorCollection<H1F> H_FADC_RAW = new DetectorCollection<H1F>(); //  pulse   
-    DetectorCollection<H1F> H_FADC_RAW_PED = new DetectorCollection<H1F>(); //
-    DetectorCollection<H1F> H_FADC_RAW_PUL = new DetectorCollection<H1F>(); //
-//    DetectorCollection<GraphErrors> G_FADC_ANALYSIS = new DetectorCollection<GraphErrors>();
+    IndexedList<DataGroup> dataGroups = new IndexedList<DataGroup>();   
 
-    DetectorCollection<H1F> H_VT = new DetectorCollection<H1F>();   // '' calibrated to no. photoelectrons and time
-    DetectorCollection<H1F> H_NPE = new DetectorCollection<H1F>();    // Semi Accumulated
     DetectorCollection<H1F> H_PED_TEMP = new DetectorCollection<H1F>();     // Accumulated
     DetectorCollection<H1F> H_PED = new DetectorCollection<H1F>();
     DetectorCollection<GraphErrors> H_PED_VS_EVENT = new DetectorCollection<GraphErrors>();
@@ -258,46 +251,50 @@ public class FTHodoHistograms {
     private void setHistogramsHodo(int index) {
         char detector = 'h';
         HP.setAllParameters(index, detector);
+        
+        //----------------------------
+        // Event-by-Event Histograms
 
         H1F H_FADC = new H1F("H_FADC", HP.getTitle(), 100, 0.0, 100.0);   
         H_FADC.setFillColor(4);
         H_FADC.setTitleX("fADC Time");
         H_FADC.setTitleY("fADC Amplitude (ped sub)");
         
+        H1F H_FADC_RAW = new H1F("H_FADC_RAW", HP.getTitle(), 100, 0.0, 100.0);
+        H_FADC_RAW.setFillColor(4);
+        H_FADC_RAW.setTitleX("fADC Time");
+        H_FADC_RAW.setTitleY("fADC raw Amplitude");
+        
+        H1F H_FADC_RAW_PED = new H1F("H_FADC_RAW_PED", HP.getTitle(), 100, 0.0, 100.0);
+        H_FADC_RAW_PED.setTitleX("fADC Time");
+        H_FADC_RAW_PED.setTitleY("fADC raw Amplitude");
+        H_FADC_RAW_PED.setFillColor(47);
+        
+        H1F H_FADC_RAW_PUL = new H1F("H_FADC_RAW_PUL", HP.getTitle(), 100, 0.0, 100.0);
+        H_FADC_RAW_PUL.setTitleX("fADC Time");
+        H_FADC_RAW_PUL.setTitleY("fADC raw Amplitude");
+        H_FADC_RAW_PUL.setFillColor(46);
+        
+        H1F H_VT = new H1F("H_VT", HP.getTitle(), 100, 0.0, 400.0);
+        H_VT.setFillColor(3);
+        H_VT.setTitleX("Time (ns)");
+        H_VT.setTitleY("Voltage - ped sub (mV)");
+        
+        H1F H_NPE = new H1F("H_NPE", HP.getTitle(), 100, 0.0, 400.0);
+        H_NPE.setFillColor(5);
+        H_NPE.setTitleX("Time (ns)");
+        H_NPE.setTitleY("Photoelectrons (amp mV/spe mV");
+        
+        // add the histograms to the datagroup
         DataGroup dg = new DataGroup();  // ncols and nrows worth adding?
-        dg.addDataSet(H_FADC, 0);  // order 0?
+        dg.addDataSet(H_FADC, 0);  // order doesn't seem to be implemented
+        dg.addDataSet(H_FADC_RAW, 0);
+        dg.addDataSet(H_FADC_RAW_PED, 0);
+        dg.addDataSet(H_FADC_RAW_PUL, 0);
+        dg.addDataSet(H_VT, 0);
+        dg.addDataSet(H_NPE, 0);
         dataGroups.add(dg, HP.getS(), HP.getL(), HP.getC());
-              
-        //----------------------------
-        // Event-by-Event Histograms
-        H_FADC_RAW.add(HP.getS(), HP.getL(), HP.getC(), new H1F(DetectorDescriptor.getName("H_FADC_RAW",HP.getS(),HP.getL(),HP.getC()),HP.getTitle(), 100, 0.0, 100.0));
-        H_FADC_RAW.get(HP.getS(), HP.getL(), HP.getC()).setFillColor(4);
-        H_FADC_RAW.get(HP.getS(), HP.getL(), HP.getC()).setTitleX("fADC Time");
-        H_FADC_RAW.get(HP.getS(), HP.getL(), HP.getC()).setTitleY("fADC raw Amplitude");
-        H_FADC_RAW_PED.add(HP.getS(), HP.getL(), HP.getC(),new H1F(DetectorDescriptor.getName("H_FADC_RAW_PED",HP.getS(),HP.getL(),HP.getC()),HP.getTitle(), 100, 0.0, 100.0));
-        H_FADC_RAW_PED.get(HP.getS(), HP.getL(), HP.getC()).setTitleX("fADC Time");
-        H_FADC_RAW_PED.get(HP.getS(), HP.getL(), HP.getC()).setTitleY("fADC raw Amplitude");
-        H_FADC_RAW_PED.get(HP.getS(), HP.getL(), HP.getC()).setFillColor(47);
-        H_FADC_RAW_PUL.add(HP.getS(), HP.getL(), HP.getC(),new H1F(DetectorDescriptor.getName("H_FADC_RAW_PUL",HP.getS(),HP.getL(),HP.getC()),HP.getTitle(), 100, 0.0, 100.0));
-        H_FADC_RAW_PUL.get(HP.getS(), HP.getL(), HP.getC()).setTitleX("fADC Time");
-        H_FADC_RAW_PUL.get(HP.getS(), HP.getL(), HP.getC()).setTitleY("fADC raw Amplitude");
-        H_FADC_RAW_PUL.get(HP.getS(), HP.getL(), HP.getC()).setFillColor(46);
-//        G_FADC_ANALYSIS.add(HP.getS(), HP.getL(), HP.getC(), new GraphErrors());
-//        G_FADC_ANALYSIS.get(HP.getS(), HP.getL(), HP.getC()).setTitle(DetectorDescriptor.getName("G_FADC_ANALYSIS",HP.getS(),HP.getL(),HP.getC())); //  title
-//        G_FADC_ANALYSIS.get(HP.getS(), HP.getL(), HP.getC()).setTitleX("fADC Time");
-//        G_FADC_ANALYSIS.get(HP.getS(), HP.getL(), HP.getC()).setTitleY("fADC raw Amplitude");
-//        G_FADC_ANALYSIS.get(HP.getS(), HP.getL(), HP.getC()).setMarkerColor(1); // color from 0-9 for given palette
-//        G_FADC_ANALYSIS.get(HP.getS(), HP.getL(), HP.getC()).setMarkerSize(2); // size in points on the screen
-//        G_FADC_ANALYSIS.get(HP.getS(), HP.getL(), HP.getC()).addPoint(0, 200, 0, 0);
-//        G_FADC_ANALYSIS.get(HP.getS(), HP.getL(), HP.getC()).addPoint(100, 200, 0, 0);
-        H_VT.add(HP.getS(), HP.getL(), HP.getC(), new H1F(DetectorDescriptor.getName("H_VT", HP.getS(), HP.getL(),HP.getC()),HP.getTitle(), 100, 0.0, 400.0));
-        H_VT.get(HP.getS(), HP.getL(), HP.getC()).setFillColor(3);
-        H_VT.get(HP.getS(), HP.getL(), HP.getC()).setTitleX("Time (ns)");
-        H_VT.get(HP.getS(), HP.getL(), HP.getC()).setTitleY("Voltage - ped sub (mV)");
-        H_NPE.add(HP.getS(), HP.getL(), HP.getC(),new H1F(DetectorDescriptor.getName("H_NPE", HP.getS(),HP.getL(), HP.getC()),HP.getTitle(), 100, 0.0, 400.0));
-        H_NPE.get(HP.getS(), HP.getL(), HP.getC()).setFillColor(5);
-        H_NPE.get(HP.getS(), HP.getL(), HP.getC()).setTitleX("Time (ns)");
-        H_NPE.get(HP.getS(), HP.getL(), HP.getC()).setTitleY("Photoelectrons (amp mV/spe mV");
+
         //----------------------------
         // Accumulated Histograms
         // PEDESTAL CANVAS
@@ -1020,7 +1017,7 @@ public class FTHodoHistograms {
             return false;
         }
     }
-
+    
     
     public void initThresholdParameters(int s, int l, int c) {
         if (fThr.hasEntry(s, l, c)){

@@ -1505,41 +1505,38 @@ public class FTHODOModule extends JPanel implements CalibrationConstantsListener
         //----------------------------------------
         // Left top (bottom) for thin (thick) layer
         //  fADC pulse pedestal unsubtracted
+        
+        // TODO update these to use the datagroup
+        // double check all below are the correct sec lay com!!
         canvasEvent.cd(layCDL);
-        if (histogramsFTHodo.H_FADC_RAW.hasEntry(secSel,laySel,comSel)){
-            this.canvasEvent.draw(histogramsFTHodo.H_FADC_RAW.get(secSel,laySel,comSel)); 
-                 if (histogramsFTHodo.H_FADC_RAW_PED.hasEntry(secSel,laySel,comSel))
-                    this.canvasEvent.draw(histogramsFTHodo.H_FADC_RAW_PED.get(secSel,laySel,comSel),"same");
-                 if (histogramsFTHodo.H_FADC_RAW_PUL.hasEntry(secSel,laySel,comSel))
-                    this.canvasEvent.draw(histogramsFTHodo.H_FADC_RAW_PUL.get(secSel,laySel,comSel),"same");
-                 //if (histogramsFTHodo.G_FADC_ANALYSIS.hasEntry(secSel,laySel,comSel)){
-                 //   if (histogramsFTHodo.G_FADC_ANALYSIS.get(secSel,laySel,comSel).getDataSize(1)>1)   
-                 //       this.canvasEvent.draw(histogramsFTHodo.G_FADC_ANALYSIS.get(secSel, laySel, comSel),"same");
-                 //}
+        DataGroup dg = histogramsFTHodo.dataGroups.getItem(secSel,laySel,comSel);
+        if (dg.getH1F("H_FADC_RAW") != null){
+            this.canvasEvent.draw(dg.getH1F("H_FADC_RAW")); 
+                 if (dg.getH1F("H_FADC_RAW_PED") != null)
+                    this.canvasEvent.draw(dg.getH1F("H_FADC_RAW_PED"), "same");
+                 if (dg.getH1F("H_FADC_RAW_PUL") != null)
+                    this.canvasEvent.draw(dg.getH1F("H_FADC_RAW_PUL"), "same");
         }
+           
         canvasEvent.cd(oppCDL);
-        if (histogramsFTHodo.H_FADC_RAW.hasEntry(secSel,oppSel,comSel)){
-            this.canvasEvent.draw(histogramsFTHodo.H_FADC_RAW.get(secSel,oppSel,comSel)); 
-                 if (histogramsFTHodo.H_FADC_RAW_PED.hasEntry(secSel,oppSel,comSel))
-                    this.canvasEvent.draw(histogramsFTHodo.H_FADC_RAW_PED.get(secSel,oppSel,comSel),"same");
-                 if (histogramsFTHodo.H_FADC_RAW_PUL.hasEntry(secSel,oppSel,comSel))
-                    this.canvasEvent.draw(histogramsFTHodo.H_FADC_RAW_PUL.get(secSel,oppSel,comSel),"same");
-                 //if (histogramsFTHodo.G_FADC_ANALYSIS.hasEntry(secSel,oppSel,comSel)){
-                 //   if (histogramsFTHodo.G_FADC_ANALYSIS.get(secSel,oppSel,comSel).getDataSize(1)>1)   
-                 //       this.canvasEvent.draw(histogramsFTHodo.G_FADC_ANALYSIS.get(secSel, oppSel, comSel),"same");
-                 //}
+        DataGroup dg_oppCDL = histogramsFTHodo.dataGroups.getItem(secSel,oppSel,comSel);
+        if (dg_oppCDL.getH1F("H_FADC_RAW") != null){
+            this.canvasEvent.draw(dg_oppCDL.getH1F("H_FADC_RAW")); 
+                 if (dg_oppCDL.getH1F("H_FADC_RAW_PED") != null)
+                    this.canvasEvent.draw(dg_oppCDL.getH1F("H_FADC_RAW_PED"), "same");
+                 if (dg_oppCDL.getH1F("H_FADC_RAW_PUL") != null)
+                    this.canvasEvent.draw(dg_oppCDL.getH1F("H_FADC_RAW_PUL"), "same");
         }
 
         //----------------------------------------
         // Middle top (bottom) for thin (thick) layer
         //  fADC pulse pedestal subtracted
         canvasEvent.cd(layCDM);
-        
-        H1F h_fadc1 = histogramsFTHodo.dataGroups.getItem(secSel,laySel,comSel).getH1F("H_FADC");        
-        if (h_fadc1 != null){  // better way to do this?
-            this.canvasEvent.draw(h_fadc1);
-            if (histogramsFTHodo.fThr.hasEntry(secSel,laySel,comSel)) {
-                this.canvasEvent.draw(histogramsFTHodo.fThr.get(secSel,laySel,comSel), "same");
+        DataGroup dg_layCDM = histogramsFTHodo.dataGroups.getItem(secSel,laySel,comSel);
+        if (dg_layCDM.getH1F("H_FADC") != null){  // better way to do this?
+            this.canvasEvent.draw(dg_layCDM.getH1F("H_FADC"));
+            if (dg_layCDM.getH1F("fThr") != null) {
+                this.canvasEvent.draw(dg_layCDM.getH1F("fThr"), "same");
             }
         }
 
@@ -1547,31 +1544,32 @@ public class FTHODOModule extends JPanel implements CalibrationConstantsListener
         // Middle top (bottom) for thin (thick) layer
         //  fADC pulse pedestal Subtracted
         canvasEvent.cd(oppCDM);
-
-        H1F h_fadc2 = histogramsFTHodo.dataGroups.getItem(secSel,oppSel,comSel).getH1F("H_FADC");   
-        if (h_fadc2 != null){ // better way to do this?
-            this.canvasEvent.draw(h_fadc2);
-            if (histogramsFTHodo.fThr.hasEntry(secSel,oppSel,comSel)) {
-                this.canvasEvent.draw(histogramsFTHodo.fThr.get(secSel,oppSel,comSel), "same");
+        DataGroup dg_oppCDM = histogramsFTHodo.dataGroups.getItem(secSel,oppSel,comSel);
+        if (dg_oppCDM.getH1F("H_FADC") != null){ // better way to do this?
+            this.canvasEvent.draw(dg_oppCDM.getH1F("H_FADC"));
+            if (dg_oppCDM.getH1F("fThr") != null) {
+                this.canvasEvent.draw(dg_oppCDM.getH1F("fThr"), "same");
             }
         }
 
         //----------------------------------------
         // right top (bottom) for thin (thick) layer
         canvasEvent.cd(layCDR);
-        if (histogramsFTHodo.H_VT.hasEntry(secSel,laySel,comSel)) {
-            this.canvasEvent.draw(histogramsFTHodo.H_VT.get(secSel,laySel,comSel));
-            if (histogramsFTHodo.fVThr.hasEntry(secSel,laySel,comSel)) {
-                this.canvasEvent.draw(histogramsFTHodo.fVThr.get(secSel,laySel,comSel), "same");
+        DataGroup dg_layCDR = histogramsFTHodo.dataGroups.getItem(secSel,laySel,comSel);
+        if (dg_layCDR.getH1F("H_VT") != null) {
+            this.canvasEvent.draw(dg_layCDR.getH1F("H_VT"));
+            if (dg_layCDR.getH1F("fVThr") != null) {
+                this.canvasEvent.draw(dg_layCDR.getH1F("fVThr"), "same");
             }
         }
         //----------------------------------------
         // right top (bottom) for thin (thick) layer
         canvasEvent.cd(oppCDR);
-        if (histogramsFTHodo.H_VT.hasEntry(secSel,oppSel,comSel)) {
-            this.canvasEvent.draw(histogramsFTHodo.H_VT.get(secSel,oppSel,comSel));
-            if (histogramsFTHodo.fVThr.hasEntry(secSel,oppSel,comSel)) {
-                this.canvasEvent.draw(histogramsFTHodo.fVThr.get(secSel,oppSel,comSel), "same");
+        DataGroup dg_oppCDR = histogramsFTHodo.dataGroups.getItem(secSel,oppSel,comSel);
+        if (dg_oppCDR.getH1F("H_VT") != null) {
+            this.canvasEvent.draw(dg_oppCDR.getH1F("H_VT"));
+            if (dg_oppCDR.getH1F("fVThr") != null) {
+                this.canvasEvent.draw(dg_oppCDR.getH1F("fVThr"), "same");
             }
         }
 
@@ -1646,15 +1644,17 @@ public class FTHODOModule extends JPanel implements CalibrationConstantsListener
         // left top (bottom) for thin (thick) layer
         // calibrated fADC pulse
         canvasNoise.cd(layCDL);
-        if (histogramsFTHodo.H_VT.hasEntry(secSel, laySel, comSel)) {
-            this.canvasNoise.draw(histogramsFTHodo.H_VT.get(secSel,laySel,comSel));
-        }
+        DataGroup dg_layCDL = histogramsFTHodo.dataGroups.getItem(secSel, laySel, comSel);
+        if (dg_layCDL.getH1F("H_VT") != null) {
+            this.canvasNoise.draw(dg_layCDL.getH1F("H_VT"));
+        }       
         //----------------------------------------
         // left top (bottom) for thin (thick) layer
         // calibrated fADC pulse
         canvasNoise.cd(oppCDL);
-        if (histogramsFTHodo.H_VT.hasEntry(secSel, oppSel, comSel)) {
-            this.canvasNoise.draw(histogramsFTHodo.H_VT.get(secSel,oppSel,comSel));
+        DataGroup dg_oppCDL = histogramsFTHodo.dataGroups.getItem(secSel, oppSel, comSel);
+        if (dg_oppCDL.getH1F("H_VT") != null) {
+            this.canvasNoise.draw(dg_oppCDL.getH1F("H_VT"));
         }
         //----------------------------------------
         // middle top (bottom) for thin (thick) layer
@@ -2365,29 +2365,7 @@ public class FTHODOModule extends JPanel implements CalibrationConstantsListener
             }
         }
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
     void setGGraphGain(){
         for (int mezz = 0; mezz < 15; mezz++) {
             int sectI;
@@ -3546,10 +3524,10 @@ public class FTHODOModule extends JPanel implements CalibrationConstantsListener
             int l=histogramsFTHodo.HP.getL();
             int c=histogramsFTHodo.HP.getC();
             histogramsFTHodo.dataGroups.getItem(s,l,c).getH1F("H_FADC").reset();
-            histogramsFTHodo.H_FADC_RAW.get(s, l, c).reset();
-            histogramsFTHodo.H_FADC_RAW_PED.get(s, l, c).reset();
-            histogramsFTHodo.H_FADC_RAW_PUL.get(s, l, c).reset();
-            histogramsFTHodo.H_VT.get(s, l, c).reset();
+            histogramsFTHodo.dataGroups.getItem(s,l,c).getH1F("H_FADC_RAW").reset();
+            histogramsFTHodo.dataGroups.getItem(s,l,c).getH1F("H_FADC_RAW_PED").reset();
+            histogramsFTHodo.dataGroups.getItem(s,l,c).getH1F("H_FADC_RAW_PUL").reset();
+            histogramsFTHodo.dataGroups.getItem(s,l,c).getH1F("H_VT").reset();
         }
     }
     public void initArrays() {
@@ -3932,7 +3910,7 @@ public class FTHODOModule extends JPanel implements CalibrationConstantsListener
                     //histogramsFTHodo.H_FADC_RAW_PUL.get(sec, lay, com).reset();
                     //histogramsFTHodo.G_FADC_ANALYSIS.get(sec, lay, com).reset();
                     //histogramsFTHodo.H_VT.get(sec, lay, com).reset();
-                    histogramsFTHodo.H_NPE.get(sec, lay, com).reset();
+                    histogramsFTHodo.dataGroups.getItem(secSel,laySel,comSel).getH1F("H_NPE").reset(); // needed?
                     
                     
                     //===============================
@@ -4014,19 +3992,19 @@ public class FTHODOModule extends JPanel implements CalibrationConstantsListener
                         if (i == 100) {
                             System.out.println(" pulse[" + i + "] = " + pulse[i]);
                         }
-                        histogramsFTHodo.H_FADC_RAW.get(sec, lay, com).fill(i, pulse[i]);
+                        histogramsFTHodo.dataGroups.getItem(sec, lay, com).getH1F("H_FADC_RAW").fill(i, pulse[i]);
                         if (i>ped_i1 &&i<=ped_i2)
-                            histogramsFTHodo.H_FADC_RAW_PED.get(sec, lay, com).fill(i, pulse[i]);
+                            histogramsFTHodo.dataGroups.getItem(sec, lay, com).getH1F("H_FADC_RAW_PED").fill(i, pulse[i]);
                         if (i>pul_i1 &&i<=pul_i2)
-                            histogramsFTHodo.H_FADC_RAW_PUL.get(sec, lay, com).fill(i, pulse[i]);
+                            histogramsFTHodo.dataGroups.getItem(sec, lay, com).getH1F("H_FADC_RAW_PUL").fill(i, pulse[i]);
                         
                         // Baseline unsubtracted
                         baselineSubRaw = pulse[i] - compEvntPed + histogramsFTHodo.PedOffset;
                         histogramsFTHodo.dataGroups.getItem(sec, lay, com).getH1F("H_FADC").fill(i, baselineSubRaw);
                         calibratedWave = (pulse[i] - compEvntPed) * histogramsFTHodo.LSB +  histogramsFTHodo.vPedOffset;
-                        histogramsFTHodo.H_VT.get(sec, lay, com).fill(i * 4, calibratedWave);
+                        histogramsFTHodo.dataGroups.getItem(sec, lay, com).getH1F("H_VT").fill(i * 4, calibratedWave);
                         npeWave = (pulse[i] - compEvntPed) * histogramsFTHodo.LSB / histogramsFTHodo.voltsPerSPE;
-                        histogramsFTHodo.H_NPE.get(sec, lay, com).fill(i * 4, npeWave);
+                        histogramsFTHodo.dataGroups.getItem(sec, lay, com).getH1F("H_NPE").fill(i * 4, npeWave);
                     }
                     double waveMax = 0.;
                     waveMax = -compEvntPed;
